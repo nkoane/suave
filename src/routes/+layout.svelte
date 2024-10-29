@@ -1,10 +1,14 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import '../app.css';
+	import type { LayoutServerData } from './$types';
+	import { enhance } from '$app/forms';
 	const copyright = $state({
 		year: new Date().getFullYear(),
 		owner: 'Eat The Sour Pap'
 	});
-	let { children } = $props();
+	let { children, data }: { data: LayoutServerData; children: Snippet } = $props();
+	console.info('Layout data:', data);
 </script>
 
 <svelte:head>
@@ -17,14 +21,20 @@
 		</a>
 		<nav class="flex gap-4 text-xs uppercase">
 			<a href="/">root</a>
-			<a href="/login">login</a>
-			<a href="/register">register</a>
+			{#if data?.user}
+				<form method="post" action="/demo/lucia/?/logout" use:enhance>
+					<button>Sign out</button>
+				</form>
+			{:else}
+				<a href="/demo/lucia/login">login</a>
+				<a href="/demo/lucia/register">register</a>
+			{/if}
 		</nav>
 	</header>
 	<section class="flex-grow p-8">
 		{@render children()}
 	</section>
-	<footer class="bg-gray-200 p-8 text-xs">
+	<footer class="bg-gray-200 px-8 py-4 text-xs">
 		<p>{copyright.owner} &copy; {copyright.year}</p>
 	</footer>
 </main>
