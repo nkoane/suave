@@ -89,6 +89,7 @@ export const actions: Actions = {
 				secure: !dev
 			});
 		} catch (e) {
+			console.error('Failed to register user', e);
 			return fail(500, { message: 'An error has occurred' });
 		}
 		return redirect(302, '/demo/lucia');
